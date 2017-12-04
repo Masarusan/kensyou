@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,9 +15,10 @@ import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
 
-public class Albam_fileBean {
+public class Albam_fileBean extends Date_today{
 	private BufferedImage image;
 	private Image Image_Read;
+	private Path path;
 
 	public BufferedImage getImage() {
 		return image;
@@ -30,6 +32,12 @@ public class Albam_fileBean {
 	public void setImage_Read(Image image_Read) {
 		Image_Read = image_Read;
 	}
+
+	//コンストラクタ
+	public Albam_fileBean() {
+		this.path = Paths.get("");
+	}
+
 	//ファイル読み込み
 	public Path file_read(Path path) {
 		try(InputStream is = Files.newInputStream(path, StandardOpenOption.CREATE)) {
@@ -74,13 +82,10 @@ public class Albam_fileBean {
 		return this.setImage(readImage);
 
 	}
-	//ファイル書き込み
-	//ファイル作成
-	//ファイル名入力
-	//ファイル・ディレクトリ作成
-	//ファイル、ディレクトリ判定
-	public Path file_System(String directory) {
-		Path path = Paths.get(directory);
+
+	//ファイル・ディレクトリ作成(現在時刻日時で)
+	public Path file_System() {
+		this.path = Paths.get(this.Currentdirectory()+ "/"+ this.DirectoriesName());
 		try {
 			Files.createDirectory(path);
 		}
@@ -92,7 +97,27 @@ public class Albam_fileBean {
 			System.out.println(ex.getMessage());
 		}
 		return path;
+	}
+	//日付日時でファイル：ディレクトリ名前作成
+	public String DirectoriesName() {
+		String directoryname = new Date_today().getDatetime();
+		return directoryname;
 
+	}
+
+	//カレントディレクトリ取得
+	public Path Currentdirectory() {
+		return this.path.toAbsolutePath();
+	}
+
+	public String relativePath() throws IOException {
+		return this.path.toRealPath(LinkOption.NOFOLLOW_LINKS).toString();
+	}
+
+	//String型の絶対パス
+	public String current() {
+		String path = new File(".").getAbsoluteFile().getParent();
+		return path;
 	}
 
 	//複数ディレクトリ作成
