@@ -45,7 +45,9 @@ class Albam_fileBeanTest {
 
 	@Test
 	void testFile_System() {
-		fail("まだ実装されていません");
+		//fail("まだ実装されていません");
+		Albam_fileBean alfile = new Albam_fileBean();
+		System.out.println(alfile.file_System());
 	}
 
 	@Test
@@ -56,12 +58,12 @@ class Albam_fileBeanTest {
 	@Test
 	void testDirectories() throws IOException {
 		//fail("まだ実装されていません");
-		Albam_fileBean alfile = new Albam_fileBean();
-		System.out.println(alfile.Currentdirectory().toString());
+		//Albam_fileBean alfile = new Albam_fileBean();
+		//System.out.println(alfile.Currentdirectory().toString());
 		//System.out.println(alfile.current());
-		System.out.println(alfile.relativePath());
+		//System.out.println(alfile.relativePath());
 		//System.out.println(new String(System.getProperty("user.dir")));
-		System.out.println(alfile.file_System());
+		//System.out.println(alfile.file_System());
 
 	}
 

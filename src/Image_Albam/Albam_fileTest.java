@@ -33,6 +33,11 @@ class Albam_fileTest implements Albam{
 	}
 
 	@Test
+	void System_Notification() {
+		System_Notification();
+	}
+
+	@Test
 	void testTemporarily_file() {
 		fail("まだ実装されていません");
 	}

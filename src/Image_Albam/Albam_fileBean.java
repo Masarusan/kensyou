@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
@@ -19,7 +21,20 @@ public class Albam_fileBean extends Date_today{
 	private BufferedImage image;
 	private Image Image_Read;
 	private Path path;
+	private Path directoryPath;
 
+	public Path getPath() {
+		return path;
+	}
+	public void setPath(Path path) {
+		this.path = path;
+	}
+	public Path getDirectoryPath() {
+		return directoryPath;
+	}
+	public void setDirectoryPath(Path directoryPath) {
+		this.directoryPath = directoryPath;
+	}
 	public BufferedImage getImage() {
 		return image;
 	}
@@ -35,7 +50,10 @@ public class Albam_fileBean extends Date_today{
 
 	//コンストラクタ
 	public Albam_fileBean() {
+		//super.toString();
+		this.directoryPath = Paths.get("");
 		this.path = Paths.get("");
+		//this.file_System();
 	}
 
 	//ファイル読み込み
@@ -83,11 +101,11 @@ public class Albam_fileBean extends Date_today{
 
 	}
 
-	//ファイル・ディレクトリ作成(現在時刻日時で)
-	public Path file_System() {
-		this.path = Paths.get(this.Currentdirectory()+ "/"+ this.DirectoriesName());
+	//ディレクトリ作成(現在時刻日時で)
+	protected Path file_System() {
+		this.directoryPath = Paths.get(this.Currentdirectory() +  "/"+ this.DirectoriesName2());
 		try {
-			Files.createDirectory(path);
+			Files.createDirectory(this.directoryPath);
 		}
 		catch(NoSuchFileException e) {
 			System.out.println("ディレクトリが存在しません");
@@ -98,9 +116,27 @@ public class Albam_fileBean extends Date_today{
 		}
 		return path;
 	}
+
+	//ディレクトを作成しその中にファイル作成
+	protected Path file_Create(URI uri) {
+		this.file_System();
+		this.path = Paths.get(uri.getPath()).getFileName();
+		Path filename =this.directoryPath.resolve(this.path);
+		System.out.println(this.getPath());
+		return filename;
+
+	}
+
 	//日付日時でファイル：ディレクトリ名前作成
-	public String DirectoriesName() {
+	protected String DirectoriesName() {
 		String directoryname = new Date_today().getDatetime();
+		return directoryname;
+
+	}
+
+	//日付日時でファイル：ディレクトリ名前作成
+	protected String DirectoriesName2() {
+		String directoryname = new Date_today().getDateTime().format(this.getFormat_date());
 		return directoryname;
 
 	}
