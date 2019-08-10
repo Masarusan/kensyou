@@ -6,7 +6,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,10 +17,24 @@ import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
 
-public class Albam_fileBean {
+public class Albam_fileBean extends Date_today{
 	private BufferedImage image;
 	private Image Image_Read;
+	private Path path;
+	private Path directoryPath;
 
+	public Path getPath() {
+		return path;
+	}
+	public void setPath(Path path) {
+		this.path = path;
+	}
+	public Path getDirectoryPath() {
+		return directoryPath;
+	}
+	public void setDirectoryPath(Path directoryPath) {
+		this.directoryPath = directoryPath;
+	}
 	public BufferedImage getImage() {
 		return image;
 	}
@@ -30,6 +47,15 @@ public class Albam_fileBean {
 	public void setImage_Read(Image image_Read) {
 		Image_Read = image_Read;
 	}
+
+	//コンストラクタ
+	public Albam_fileBean() {
+		//super.toString();
+		this.directoryPath = Paths.get("");
+		this.path = Paths.get("");
+		//this.file_System();
+	}
+
 	//ファイル読み込み
 	public Path file_read(Path path) {
 		try(InputStream is = Files.newInputStream(path, StandardOpenOption.CREATE)) {
@@ -74,15 +100,12 @@ public class Albam_fileBean {
 		return this.setImage(readImage);
 
 	}
-	//ファイル書き込み
-	//ファイル作成
-	//ファイル名入力
-	//ファイル・ディレクトリ作成
-	//ファイル、ディレクトリ判定
-	public Path file_System(String directory) {
-		Path path = Paths.get(directory);
+
+	//ディレクトリ作成(現在時刻日時で)
+	protected Path file_System() {
+		this.directoryPath = Paths.get(this.Currentdirectory() +  "/"+ this.DirectoriesName2());
 		try {
-			Files.createDirectory(path);
+			Files.createDirectory(this.directoryPath);
 		}
 		catch(NoSuchFileException e) {
 			System.out.println("ディレクトリが存在しません");
@@ -92,7 +115,45 @@ public class Albam_fileBean {
 			System.out.println(ex.getMessage());
 		}
 		return path;
+	}
 
+	//ディレクトを作成しその中にファイル作成
+	protected Path file_Create(URI uri) {
+		this.file_System();
+		this.path = Paths.get(uri.getPath()).getFileName();
+		Path filename =this.directoryPath.resolve(this.path);
+		System.out.println(this.getPath());
+		return filename;
+
+	}
+
+	//日付日時でファイル：ディレクトリ名前作成
+	protected String DirectoriesName() {
+		String directoryname = new Date_today().getDatetime();
+		return directoryname;
+
+	}
+
+	//日付日時でファイル：ディレクトリ名前作成
+	protected String DirectoriesName2() {
+		String directoryname = new Date_today().getDateTime().format(this.getFormat_date());
+		return directoryname;
+
+	}
+
+	//カレントディレクトリ取得
+	public Path Currentdirectory() {
+		return this.path.toAbsolutePath();
+	}
+
+	public String relativePath() throws IOException {
+		return this.path.toRealPath(LinkOption.NOFOLLOW_LINKS).toString();
+	}
+
+	//String型の絶対パス
+	public String current() {
+		String path = new File(".").getAbsoluteFile().getParent();
+		return path;
 	}
 
 	//複数ディレクトリ作成
